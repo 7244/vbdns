@@ -1,0 +1,7 @@
+very broken dns server
+
+redirecting dns requests to defined dns server and caching them for infinite time
+
+made for environments where dns queries are super slow
+
+language: c99
