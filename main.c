@@ -218,7 +218,7 @@ void cb_DNSForwardEvent(EV_t *l, EV_event_t *e, uint32_t f){
     cmo.SubHead = DNSHead->SubHead;
     cmo.Size = aqs;
     cmo.Data = A_resize(NULL, cmo.Size);
-    MEM_copy(&Data[i], cmo.Data, cmo.Size);
+    __builtin_memcpy(cmo.Data, &Data[i], cmo.Size);
     DNSCacheMap_InNew(&pile.DNSCacheMap, &Data[di], ds, &cmo);
   }
   gt_NoCache:;
@@ -307,20 +307,20 @@ int main(){
   {
     pile.DNSForwardTransactionID = 0;
 
-    sint32_t err = NET_socket(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, IPPROTO_UDP, &pile.DNSSocket);
+    sint32_t err = NET_socket2(NET_AF_INET, NET_SOCK_DGRAM | NET_SOCK_NONBLOCK, NET_IPPROTO_UDP, &pile.DNSSocket);
     if(err != 0){
       PR_abort();
     }
 
     NET_addr_t addr;
-    addr.ip = INADDR_ANY;
+    addr.ip = NET_INADDR_ANY;
     addr.port = 53;
     err = NET_bind(&pile.DNSSocket, &addr);
     if(err != 0){
       PR_abort();
     }
 
-    err = NET_socket(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, IPPROTO_UDP, &pile.DNSForwardSocket);
+    err = NET_socket2(NET_AF_INET, NET_SOCK_DGRAM | NET_SOCK_NONBLOCK, NET_IPPROTO_UDP, &pile.DNSForwardSocket);
     if(err != 0){
       PR_abort();
     }
